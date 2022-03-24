@@ -1,7 +1,7 @@
 # Apartments booking
 
 ## Project's database architecture (24.03.2022)
-![image](https://user-images.githubusercontent.com/57063378/159779989-91447b95-b54a-43ee-bc64-7940b0d916d6.png)
+![image](https://user-images.githubusercontent.com/57063378/160011795-a380c494-f1e8-4c3c-a229-0d8f00dca4eb.png)
 
 ## Dockerize Posrtgres
 ```bash
