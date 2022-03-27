@@ -10,19 +10,23 @@ import {
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { ApiTags } from "@nestjs/swagger";
+import { User } from "./entities/user.entity";
 
+@ApiTags("Users")
 @Controller("users")
 export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
 	@Post()
-	create(@Body() createUserDto: CreateUserDto) {
-		return this.usersService.create(createUserDto);
+	async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+		const response = await this.usersService.create(createUserDto);
+		return response;
 	}
 
 	@Get()
-	findAll() {
-		return this.usersService.findAll();
+	findAllAndCount(): Promise<[User[], number]> {
+		return this.usersService.findAllAndCount();
 	}
 
 	@Get(":id")
