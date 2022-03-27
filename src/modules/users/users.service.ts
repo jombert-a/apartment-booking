@@ -7,7 +7,7 @@ import { RolesService } from "../roles/roles.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./entities/user.entity";
-
+import * as bcrypt from "bcrypt";
 @Injectable()
 export class UsersService {
 	constructor(
@@ -31,13 +31,32 @@ export class UsersService {
 				HttpStatus.BAD_REQUEST,
 			);
 		}
+		const phoneCandidate = await this.usersRepository.findOne({
+			phone: createUserDto.phone,
+		});
+		if (phoneCandidate) {
+			throw new HttpException(
+				{
+					status: 1,
+					error: `Phone "${createUserDto.phone}" is already taken`,
+				},
+				HttpStatus.BAD_REQUEST,
+			);
+		}
+	}
+
+	async hashPassword(passwordToHash: string): Promise<string> {
+		return await bcrypt.hash(passwordToHash, 7);
 	}
 
 	async create(createUserDto: CreateUserDto): Promise<User> {
 		await this.checkUserExisting(createUserDto);
 		const role: Role = await this.rolesService.getRoleByName(roleName.user);
+		const password: string = await this.hashPassword(
+			createUserDto.password,
+		);
 		const user = await this.usersRepository
-			.create({ ...createUserDto, role })
+			.create({ ...createUserDto, role, password })
 			.save();
 		return await this.usersRepository.findOne({ id: user.id });
 	}
