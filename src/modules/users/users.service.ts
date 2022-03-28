@@ -70,6 +70,11 @@ export class UsersService {
 		return `This action returns a #${id} user`;
 	}
 
+	async findOneByEmail(email: string): Promise<User> {
+		const candiate = await this.usersRepository.findOne({ email });
+		return candiate;
+	}
+
 	update(id: number, updateUserDto: UpdateUserDto) {
 		return `This action updates a #${id} user`;
 	}
